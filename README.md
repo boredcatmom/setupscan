@@ -31,7 +31,7 @@ A pair of tools for inspecting and capturing environment variables over HTTP.
 | `-a, --all` | Show all vars (default: sorted) |
 | `-s, --secret` | Mask values of vars whose name contains SECRET, TOKEN, KEY, PASS, PASSWORD, CREDENTIAL, PRIVATE, or AUTH |
 | `-e, --export` | Output as `export KEY=VALUE` lines |
-| `-j, --json` | POST vars as JSON to `POST_URL` |
+| `-j, --json URL` | POST vars as JSON to the given URL |
 | `-c, --count` | Print total count only |
 | `-h, --help` | Show help |
 
@@ -51,21 +51,11 @@ A pair of tools for inspecting and capturing environment variables over HTTP.
 ./setupscan.sh -e > env.export
 
 # POST all vars as JSON
-./setupscan.sh -j
+./setupscan.sh -j http://localhost:8080
 
 # POST only AWS_* vars, masking secrets
-./setupscan.sh -j -s AWS
+./setupscan.sh -j http://localhost:8080 -s AWS
 ```
-
-### Changing the POST URL
-
-The target URL is set at the top of `setupscan.sh`:
-
-```bash
-POST_URL="http://localhost:8080"
-```
-
-Change this value to point at any endpoint.
 
 ---
 
@@ -104,7 +94,7 @@ PORT = 8080
 python3 server.py
 
 # Terminal 2 — send env vars
-./setupscan.sh -j
+./setupscan.sh -j http://localhost:8080
 
 # Read back the stored data
 curl http://localhost:8080/data.txt
@@ -120,7 +110,7 @@ Each entry is separated by a header block:
 timestamp: 2026-04-08T14:32:01.123456+00:00
 ip: 127.0.0.1
 ============================================================
-{"HOME":"/home/erika","PATH":"/usr/bin:...","USER":"erika"}
+{"HOME":"/home/boredcat","PATH":"/usr/bin:...","USER":"boredcat"}
 ```
 
 Entries are appended on every POST, so the file accumulates a history of all submissions.
